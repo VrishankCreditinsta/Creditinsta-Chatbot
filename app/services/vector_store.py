@@ -58,17 +58,16 @@ def add_documents(chunks, embeddings):
 
     print(f"Upserted {len(chunks)} chunks into ChromaDB")
 
-    def delete_faq(faq_id):
 
-
-        collection.delete(
-            where={
-                "source": "faq_api",
-                "faq_id": str(faq_id)}
-
+def delete_faq(faq_id):
+    collection.delete(
+        where={
+            "source": "faq_api",
+            "faq_id": str(faq_id)
+        }
     )
+    print(f"Deleted FAQ {faq_id} from ChromaDB")
 
-        print(f"Deleted FAQ {faq_id} from ChromaDB")
 
 
 if __name__ == "__main__":

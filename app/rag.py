@@ -6,7 +6,11 @@ from app.router import classify_message
 
 
 
-def chat(message):
+from app.services.leads_service import fetch_lead_dashboard, format_lead_summary
+from app.services.llm import generate_lead_answer
+
+
+def chat(message, token=None):
     message_type = classify_message(message)
 
     if message_type == "greeting":
@@ -15,12 +19,51 @@ def chat(message):
             "message": "Hi! I'm Vabisor, your customer support assistant. How can I help you today?"
         }
 
+    if message_type == "lead_inquiry":
+        if not token or not token.strip():
+            return {
+                "type": "auth_required",
+                "message": "Please log in to your CredVisor account to view your leads."
+            }
+
+        try:
+            lead_data = fetch_lead_dashboard(token)
+            if not lead_data:
+                return {
+                    "type": "lead_status",
+                    "message": "Could not retrieve lead data. Please try again shortly."
+                }
+            
+            # Intelligently answer the user's specific lead inquiry using LLM with live stats
+            try:
+                intelligent_reply = generate_lead_answer(message, lead_data)
+                return {
+                    "type": "lead_status",
+                    "message": intelligent_reply
+                }
+            except Exception:
+                # Fallback to structured summary if LLM call fails
+                summary = format_lead_summary(lead_data)
+                return {
+                    "type": "lead_status",
+                    "message": summary
+                }
+
+        except Exception as e:
+            return {
+                "type": "lead_status",
+                "message": "An error occurred while fetching your leads. Please verify your login session."
+            }
+
+
+
     answer = answer_question(message)
 
     return {
         "type": "answer",
         "message": answer
     }
+
 
 
 

@@ -21,8 +21,11 @@ app.add_middleware(
 )
 
 
+from typing import Optional
+
 class ChatRequest(BaseModel):
     message: str
+    token: Optional[str] = None
 
 
 class ChatResponse(BaseModel):
@@ -54,11 +57,17 @@ def chat_endpoint(request: ChatRequest):
         )
 
     try:
-        response = chat(request.message.strip())
+        response = chat(request.message.strip(), token=request.token)
         return response
-
-    except Exception:
-        raise HTTPException(
-            status_code=500,
-            detail="Something went wrong while processing your request."
-        )
+    except ValueError as ve:
+        if "GEMINI_API_KEY" in str(ve):
+            return {
+                "type": "error",
+                "message": "AI answer generation is currently unavailable. Please configure GEMINI_API_KEY in the chatbot .env file."
+            }
+        raise HTTPException(status_code=400, detail=str(ve))
+    except Exception as e:
+        return {
+            "type": "error",
+            "message": f"Sorry, could not process your query at this moment: {str(e)}"
+        }

@@ -1,6 +1,4 @@
 from sentence_transformers import SentenceTransformer
-from app.ingestion.documents import load_all_documents
-from app.ingestion.chunking import split_document
 
 MODEL_NAME="BAAI/bge-base-en-v1.5"
 
