@@ -85,7 +85,7 @@ if __name__ == "__main__":
     documents = results["documents"][0]
     context = "\n\n".join(documents)
 
-    # 4. Generate answer using Gemini
+    # 4. Generate answer using Groq
     llm_start = time.perf_counter()
 
     answer = generate_answer(question, context)

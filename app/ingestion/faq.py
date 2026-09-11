@@ -3,10 +3,7 @@ import os
 from langchain_core.documents import Document
 
 
-FAQ_API_URL = os.getenc("FAQ_API_URL")
-
-if not FAQ_API_URL:
-    raise ValueError("FAQ_API_URL is not configured")
+FAQ_API_URL = os.getenv("FAQ_API_URL")
 
 
 
@@ -15,6 +12,9 @@ if not FAQ_API_URL:
 
 
 def fetch_faqs():
+    if not FAQ_API_URL:
+        print("FAQ_API_URL not configured, skipping online FAQs.")
+        return []
 
     response = requests.get(
         FAQ_API_URL,
