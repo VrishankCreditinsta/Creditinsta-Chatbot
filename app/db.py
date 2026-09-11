@@ -138,6 +138,16 @@ if USE_MSSQL:
         conn.close()
         return [dict(r) for r in rows]
 
+    def delete_conversation(session_id):
+        conn = get_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE chatbot_sessions SET is_active = 0 WHERE session_id = %s",
+            (session_id,)
+        )
+        conn.close()
+        return True
+
     def get_quick_suggestions():
         try:
             conn = get_connection()
@@ -152,10 +162,10 @@ if USE_MSSQL:
         except Exception:
             pass
         return [
-            "How to check my loan eligibility?",
-            "What is a good CIBIL / credit score?",
-            "How does a Personal Loan work?",
-            "What is a Mutual Fund and SIP?",
+            "What is CreditInsta?",
+            "How can you help me?",
+            "What is a Credit Score?",
+            "Tell me about Loans",
             "Connect to CredVisor Manager"
         ]
 
