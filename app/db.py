@@ -138,15 +138,26 @@ if USE_MSSQL:
         conn.close()
         return [dict(r) for r in rows]
 
-    def delete_conversation(session_id):
-        conn = get_connection()
-        cursor = conn.cursor()
-        cursor.execute(
-            "UPDATE chatbot_sessions SET is_active = 0 WHERE session_id = %s",
-            (session_id,)
-        )
-        conn.close()
-        return True
+    def get_quick_suggestions():
+        try:
+            conn = get_connection()
+            cursor = conn.cursor(as_dict=True)
+            cursor.execute(
+                "SELECT question_text FROM chatbot_quick_questions WHERE is_active = 1 ORDER BY display_order ASC"
+            )
+            rows = cursor.fetchall()
+            conn.close()
+            if rows:
+                return [r["question_text"] for r in rows]
+        except Exception:
+            pass
+        return [
+            "How to check my loan eligibility?",
+            "What is a good CIBIL / credit score?",
+            "How does a Personal Loan work?",
+            "What is a Mutual Fund and SIP?",
+            "Connect to CredVisor Manager"
+        ]
 
 else:
     import sqlite3

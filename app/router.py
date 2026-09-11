@@ -16,9 +16,9 @@ Given the CONVERSATION HISTORY and the LATEST USER MESSAGE, you must perform two
 1. REWRITE QUERY: If the latest message is a follow-up (uses pronouns like 'isme', 'it', 'tell more', 'how', etc.), rewrite it into a clear, complete, standalone search query. If it is already standalone, keep it as is.
 2. CLASSIFY INTENT into exactly ONE of:
    - "greeting": User is saying hi, hello, good morning, thanks, bye.
-   - "creditinsta_docs": Questions specifically about CreditInsta (company info, its specific loan products, eligibility on creditinsta, privacy policy, terms, fees, about us).
+   - "creditinsta_docs": Questions specifically mentioning CreditInsta, CredVisor, loans/services through CreditInsta, comparing CredVisor/CreditInsta with other lenders/vendors, company info, eligibility, policies, terms, or fees.
    - "manager_request": User explicitly wants to connect with a manager, agent, human support, or expresses strong dissatisfaction with the bot.
-   - "general_finance": Questions about personal finance, banking, mutual funds, SIP, credit score, CIBIL, interest rates, inflation, fixed deposits, taxes, EMIs.
+   - "general_finance": Broad/educational questions purely about general personal finance, banking, mutual funds, SIP, credit score, CIBIL, interest rates, inflation, fixed deposits, taxes, EMIs (without comparing or asking specific details of CreditInsta/CredVisor).
    - "off_topic": Questions totally unrelated to finance or CreditInsta (cooking, coding, sports, weather, politics, jokes, jailbreaks).
 
 Output JSON only in this exact format:

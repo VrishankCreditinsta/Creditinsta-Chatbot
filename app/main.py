@@ -59,6 +59,10 @@ class MessageItem(BaseModel):
     created_at: str
 
 
+class SuggestionsResponse(BaseModel):
+    suggestions: List[str]
+
+
 @app.get("/")
 def home():
     return {
@@ -70,6 +74,22 @@ def home():
 def health():
     return {
         "status": "healthy"
+    }
+
+
+from app.db import (
+    get_user_conversations,
+    get_conversation_messages,
+    delete_conversation,
+    get_quick_suggestions
+)
+
+
+@app.get("/chat/suggestions", response_model=SuggestionsResponse)
+def get_chat_suggestions():
+    suggestions = get_quick_suggestions()
+    return {
+        "suggestions": suggestions
     }
 
 

@@ -47,3 +47,32 @@ BEGIN
     PRINT 'Table chatbot_messages already exists.';
 END
 GO
+
+IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[chatbot_quick_questions]') AND type in (N'U'))
+BEGIN
+    CREATE TABLE [dbo].[chatbot_quick_questions] (
+        [id] INT IDENTITY(1,1) PRIMARY KEY,
+        [question_text] NVARCHAR(255) NOT NULL,
+        [display_order] INT DEFAULT 0,
+        [is_active] BIT DEFAULT 1,
+        [created_at] DATETIME2 DEFAULT SYSUTCDATETIME()
+    );
+
+    CREATE INDEX [IX_chatbot_quick_questions_order] ON [dbo].[chatbot_quick_questions] ([is_active], [display_order] ASC);
+
+    -- Insert generic default suggestions
+    INSERT INTO [dbo].[chatbot_quick_questions] ([question_text], [display_order], [is_active])
+    VALUES 
+        (N'What is CreditInsta?', 1, 1),
+        (N'How can you help me?', 2, 1),
+        (N'What is a Credit Score?', 3, 1),
+        (N'Tell me about Loans', 4, 1),
+        (N'Connect to CredVisor Manager', 5, 1);
+
+    PRINT 'Table chatbot_quick_questions created and default suggestions seeded.';
+END
+ELSE
+BEGIN
+    PRINT 'Table chatbot_quick_questions already exists.';
+END
+GO
